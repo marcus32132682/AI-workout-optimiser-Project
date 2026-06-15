@@ -47,10 +47,17 @@ for i in range(90):
     db.add(workout)
     db.commit()
 
+    bad_week = (i // 7) == 5
+    if bad_week:
+        workout_fatigue = 100
+    else:
+        workout_fatigue = 0
+
     for ex_name, ex in exercise_objects.items():
         base_weight = base_weights.get(ex_name.title(), 50)
         progression = i * 0.2
-        weight = base_weight + progression + random.uniform(-2, 2)
+
+        weight = base_weight + progression - workout_fatigue + random.uniform(-2, 2)
 
         for set_num in range(1, 4):  # 3 sets per exercise
 
