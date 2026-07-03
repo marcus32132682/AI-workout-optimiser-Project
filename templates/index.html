@@ -1,23 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>
-        AI Workout Coach
-    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workout Coach</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            width: auto;
+            padding: 10px 20px;
+            margin-bottom: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: #2c7be5;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #1a68d1;
+        }
+
+        #response {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            border-left: 5px solid #2c7be5;
+            white-space: pre-wrap;
+            min-height: 80px;
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-    <h1>
-        AI Workout Coach
-    </h1>
+<div class="container">
 
-    <form>
+    <div class="nav-bar">
+
+        <a href="/workouts">
+
+            <button
+                type="button"
+                class="nav-button">
+
+                📝 Workout Logger
+
+            </button>
+
+        </a>
+
+    </div>
+
+    <h1>🏋️ AI Workout Coach</h1>
+
+    <form id="coach-form">
 
         <input
+            id="question"
             type="text"
-            placeholder="Ask a question..."
+            placeholder="Ask your AI coach..."
         >
 
         <button type="submit">
@@ -25,6 +112,64 @@
         </button>
 
     </form>
+
+    <div id="response">
+        Ask a question to receive personalised coaching.
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("coach-form").addEventListener(
+
+    "submit",
+
+    async function(event){
+
+        event.preventDefault();
+
+        const question =
+            document.getElementById("question").value.trim();
+
+        if (!question) {
+            document.getElementById("response").innerText =
+                "Please enter a question.";
+            return;
+        }
+
+        document.getElementById("response").innerText =
+            "Thinking...";
+
+        const response = await fetch("/ai-coach", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                question: question
+
+            })
+
+        });
+
+        const data =
+            await response.json();
+
+        document.getElementById("response").innerText =
+            data.response;
+
+        document.getElementById("question").value = "";
+
+    }
+
+);
+
+</script>
 
 </body>
 

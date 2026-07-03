@@ -48,12 +48,17 @@ def get_ai_response(question=None):
         .sum()
         )
 
+    average_weekly_volume = round(
+        weekly_volume.mean(),
+        0
+    )
+
     bench = df[
         df["exercise"] == "Bench Press"
     ]
 
     bench_progress = (
-        df.groupby("week")["weight"]
+        bench.groupby("week")["weight"]
         .max()
     )
 
@@ -67,6 +72,16 @@ def get_ai_response(question=None):
 
     current_bench = (
         bench_progress.iloc[-1]
+    )
+
+    total_workouts = (
+        df["date"]
+        .nunique()
+    )
+
+    total_exercises = (
+        df["exercise"]
+        .nunique()
     )
 
     bench_df = (
@@ -114,6 +129,7 @@ def get_ai_response(question=None):
         fatigue_summary = (
             "No major fatigue detected"
         )
+    fatigue_count = len(fatigue_weeks)
 #############################
     volume_change = (
         (
@@ -134,7 +150,12 @@ def get_ai_response(question=None):
 
     summary = f"""
     Workout Summary
-
+    
+    General Statistics:
+    Total Workouts: {total_workouts}
+    Exercises Tracked: {total_exercises}
+    Average Weekly Volume: {average_weekly_volume:.0f}
+    
     Bench Progress:
     Started at: {starting_bench:.1f}kg
     Best Performance: {best_bench:.1f}kg
@@ -146,8 +167,10 @@ def get_ai_response(question=None):
     Current: {weekly_volume.iloc[-1]:.0f}
     Volume Increase: {volume_change:.1f}%
 
-    Fatigue:
+    Fatigue: 
     {fatigue_summary}
+    Fatigue weeks detected: {fatigue_count}
+    
     """
 
 ###################################
