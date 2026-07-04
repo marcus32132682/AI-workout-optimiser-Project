@@ -4,9 +4,9 @@ from scripts.ai_coach import get_ai_response
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from app.database import Session
-from app.models import Exercise
+from app.models import Exercise, Workout, Set
 from datetime import date
-from app.models import Workout, Set
+
 
 
 app = FastAPI()

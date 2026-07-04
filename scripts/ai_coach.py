@@ -1,7 +1,3 @@
-from asyncio.windows_events import NULL
-
-from sqlalchemy import null
-
 from app.database import Session
 from app.models import Set, Workout, Exercise
 from openai import OpenAI
@@ -9,7 +5,6 @@ from dotenv import load_dotenv
 import pandas as pd
 import os
 
-from scripts.workout_summary import best_bench
 
 load_dotenv()
 
@@ -37,6 +32,26 @@ def get_ai_response(question=None):
         })
 
     df = pd.DataFrame(rows)
+
+    recent_workouts = (
+        df.sort_values(
+            by="date",
+            ascending=False
+        )
+        .head(30)
+    )
+
+    recent_workout_history = ""
+
+    for _, row in recent_workouts.iterrows():
+        recent_workout_history += (
+
+            f"Date: {row['date']}\n"
+            f"Exercise: {row['exercise']}\n"
+            f"Weight: {row['weight']} kg\n"
+            f"Reps: {row['reps']}\n\n"
+
+        )
 
 
     df["date"] = pd.to_datetime(df["date"])
@@ -173,21 +188,6 @@ def get_ai_response(question=None):
     
     """
 
-###################################
-    ###while True:
-      #  Choice = input("Do you want to ask your AI coach a question regarding anything to do with your progression or training? (y/n): ").lower()
-       # if Choice == "y":
-       #     question = input("How can i help?")
-        #    break
-       # elif Choice == "n":
-           # question = None
-        #    break
-#        else:
-           # print("Please enter y or n")
-
-
-
-
 
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
@@ -222,6 +222,7 @@ def get_ai_response(question=None):
                     "or workout progress, politely refuse "
                     "to answer and explain that you only "
                     "support workout-related questions."
+                    "Try to not be as formal and robotic act as if you're a laid back personal trainer"
                     "If question is set to none then ignore it like a question wasn't asked.\n\n"
                 )
             },
@@ -231,6 +232,10 @@ def get_ai_response(question=None):
                     f"Here is my workout data:\n"
                     f"{summary}\n\n"
                     f"Question: {question}\n\n"
+                    f"Here are my 30 most recent workout entries\n"
+                    f"(The entries below are ordered from newest to oldest.)\n"
+                    f"{recent_workout_history}\n\n"
+                    f"Use recent workout entries to help answer any questions"
                     f"Answer only using the workout data provided.\n\n"
                     f"Give me recommendations.\n\n"
                 )

@@ -1,15 +1,24 @@
-AI Workout Optimizer
-Overview
+# AI Workout Optimizer
 
-A machine learning-powered application that analyzes workout data to optimise training, suggest progressive overload, and detect performance plateaus.
+## Overview
 
-Tech Stack
-Python
-SQLAlchemy
-PostgreSQL (later)
-Pandas / NumPy (later)
-Scikit-learn (later)
-FastAPI (later)
+Ai workout optimiser is an AI-powered fitness application built using python utilising FastAPI, SQLAlchemy and OpenAI.
+Users can log workouts, analyse training trends and receive personalised coaching based on their workout history and
+performance metrics
+
+## Tech Stack
+
+* Python
+* FastAPI
+* SQLAlchemy
+* Pandas
+* Scikit-learn 
+* OpenAI API
+* HTML
+* CSS
+* JavaScript 
+* Git
+
 Progress
 
 Project setup
